@@ -7,6 +7,8 @@ import com.rawit.crosstheroad.game.CrossTheRoadGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.width = CrossTheRoadGame.WIDTH;
+		config.height = CrossTheRoadGame.HEIGHT;
 		new LwjglApplication(new CrossTheRoadGame(), config);
 	}
 }
