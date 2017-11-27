@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class CrossTheRoadGame extends Game {
 
-	public static final int HEIGHT = 1280;
-	public static final int WIDTH = 720;
+	public static final int HEIGHT = 960;
+	public static final int WIDTH = 540;
 
 	SpriteBatch batch;
 

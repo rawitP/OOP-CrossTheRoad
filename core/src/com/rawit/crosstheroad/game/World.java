@@ -2,29 +2,32 @@ package com.rawit.crosstheroad.game;
 
 public class World {
 
-    private static final int BLOCK_SIZE = 100;
-
     private CrossTheRoadGame crossTheRoadGame;
     private Map map;
     private Chicken chicken;
 
     World(CrossTheRoadGame crossTheRoadGame) {
         this.crossTheRoadGame = crossTheRoadGame;
-        map = new Map(CrossTheRoadGame.WIDTH, CrossTheRoadGame.HEIGHT);
-        chicken = new Chicken(360, 640, this);
         initWorld();
     }
 
     private void initWorld() {
-        // TODO
+        map = new Map(CrossTheRoadGame.WIDTH, CrossTheRoadGame.HEIGHT, this);
+        map.setSpeed(1);
+        chicken = new Chicken(0, 0, this);
     }
 
     public Chicken getChicken() {
         return chicken;
     }
 
-    public void update(float delta) {
+    public Map getMap() {
+        return map;
+    }
 
+    public void update(float delta) {
+        map.update(delta);
+        chicken.update(delta);
     }
 
 }

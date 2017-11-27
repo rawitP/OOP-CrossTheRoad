@@ -6,19 +6,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class PlayerRenderer {
 
     private SpriteBatch batch;
-    private Chicken chicken;
+    private Chicken player;
     private Texture chickenImg;
 
     public PlayerRenderer(SpriteBatch batch, Chicken chicken) {
-        this.chicken = chicken;
+        this.player = chicken;
         this.batch = batch;
         chickenImg = new Texture("babyChicken.png");
     }
 
-    public void render() {
+    public void render(float delta) {
         batch.begin();
-        int[] chickenPos = chicken.getPosition();
-        batch.draw(chickenImg, chickenPos[0], chickenPos[1]);
+        batch.draw(chickenImg, player.getX() - player.getWidth()/2, player.getY() - player.getHeight()/2, player.getWidth(), player.getHeight());
         batch.end();
     }
 
