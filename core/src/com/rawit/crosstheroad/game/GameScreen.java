@@ -4,18 +4,35 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.rawit.crosstheroad.game.CrossTheRoadGame;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen extends ScreenAdapter {
 
     private CrossTheRoadGame crossTheRoadGame;
     World world;
     WorldRenderer worldRenderer;
+    SpriteBatch batch;
+
+    OrthographicCamera cam;
 
     public GameScreen(CrossTheRoadGame crossTheRoadGame) {
         this.crossTheRoadGame = crossTheRoadGame;
+        batch = crossTheRoadGame.batch;
         this.world = new World(crossTheRoadGame);
         this.worldRenderer = new WorldRenderer(crossTheRoadGame, world);
+
+        /*
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();\
+        */
+        Camera worldCam = world.cam;
+        float w = worldCam.viewportWidth;
+        float h = worldCam.viewportHeight;
+        cam = new OrthographicCamera(w, h);
+        cam.position.set(worldCam.x, worldCam.y, 0);
+        cam.update();
     }
 
     @Override
@@ -39,8 +56,16 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    private void updateCam(float delta) {
+        Camera worldCam = world.cam;
+        cam.position.y = worldCam.y;
+        cam.update();
+        batch.setProjectionMatrix(cam.combined);
+    }
+
     private void update(float delta) {
         updatePlayer();
         world.update(delta);
+        updateCam(delta);
     }
 }

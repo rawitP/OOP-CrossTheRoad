@@ -1,7 +1,6 @@
 package com.rawit.crosstheroad.game;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Random;
@@ -30,10 +29,9 @@ public class MapRenderer {
 
     public void render(float delta) {
         batch.begin();
-        int allRow = Map.ALL_ROW;
-        int index = 1;
+        int allRow = Map.ROW;
         for (BaseLane curLane: map.baseLaneList) {
-            Texture texture = tileArray[index];
+            Texture texture = tileArray[1];
             int curBlock = curLane.LENGTH_COLUMN_OFFSET/2;
             int lastBlock = curLane.lengthColumn - curLane.LENGTH_COLUMN_OFFSET/2 - 1;
             for ( ; curBlock <= lastBlock; curBlock++) {
@@ -41,7 +39,6 @@ public class MapRenderer {
                 batch.draw(texture, displayColumn * map.getBlockWidthSize(), curLane.y - map.getBlockHeightSize() / 2, map.getBlockWidthSize(), map.getBlockHeightSize());
             }
             batch.draw(texture, 0, curLane.y - map.getBlockHeightSize() / 2, map.getBlockWidthSize(), map.getBlockHeightSize());
-            //index = (index + 1) % tileArray.length;
         }
         batch.end();
     }

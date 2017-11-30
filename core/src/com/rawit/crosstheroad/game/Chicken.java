@@ -83,7 +83,7 @@ public class Chicken {
         switch (dir) {
             case UP: {
                 int nextRow = row + 1;
-                if (nextRow > world.getMap().baseLaneList.size() - 1) {
+                if (nextRow > world.getMap().ROW - 1) {
                     return false;
                 }
             } break;
