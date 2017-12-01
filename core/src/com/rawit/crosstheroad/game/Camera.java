@@ -22,7 +22,7 @@ public class Camera {
     }
 
     public void update(float delta) {
-        y += speed;
+        y += delta/0.016f * speed;      // Update Camera moving speed.
     }
 
 }

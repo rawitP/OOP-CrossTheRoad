@@ -1,7 +1,5 @@
 package com.rawit.crosstheroad.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class WorldRenderer {
@@ -16,7 +14,7 @@ public class WorldRenderer {
         this.crossTheRoadGame = crossTheRoadGame;
         batch = crossTheRoadGame.batch;
         this.world = world;
-        this.playerRenderer = new PlayerRenderer(batch, world.getChicken());
+        this.playerRenderer = new PlayerRenderer(batch, world.getPlayer());
         this.mapRenderer = new MapRenderer(batch, world.getMap());
     }
 

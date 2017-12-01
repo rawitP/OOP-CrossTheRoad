@@ -4,13 +4,13 @@ public class BaseLane {
 
     public int lengthColumn;
     private float length;
-    public static final int LENGTH_COLUMN_OFFSET = 2 * 3;
+    public static final int LENGTH_COLUMN_OFFSET = 3;
     public float y;
     public LaneType type;
 
     public BaseLane(float length, int lengthDisplayColumn) {
-        this.length = length + (length / (float)lengthDisplayColumn * LENGTH_COLUMN_OFFSET);
-        this.lengthColumn = lengthDisplayColumn + LENGTH_COLUMN_OFFSET;
+        this.length = length;
+        this.lengthColumn = lengthDisplayColumn;
     }
 
     public void setType(LaneType type) {

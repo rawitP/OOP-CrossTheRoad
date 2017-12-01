@@ -21,24 +21,17 @@ public class MapRenderer {
         tileArray = new Texture[]{grassImg, stoneImg};
     }
 
-    private Texture getRandomTexture() {
-        Random random = new Random();
-        int randomIndex = random.nextInt(tileArray.length);
-        return tileArray[randomIndex];
-    }
-
     public void render(float delta) {
         batch.begin();
-        int allRow = Map.ROW;
+        float blockWidth = map.getBlockWidthSize();
+        float blockHeight = map.getBlockHeightSize();
         for (BaseLane curLane: map.baseLaneList) {
             Texture texture = tileArray[1];
-            int curBlock = curLane.LENGTH_COLUMN_OFFSET/2;
-            int lastBlock = curLane.lengthColumn - curLane.LENGTH_COLUMN_OFFSET/2 - 1;
-            for ( ; curBlock <= lastBlock; curBlock++) {
-                int displayColumn = curBlock - curLane.LENGTH_COLUMN_OFFSET/2;
-                batch.draw(texture, displayColumn * map.getBlockWidthSize(), curLane.y - map.getBlockHeightSize() / 2, map.getBlockWidthSize(), map.getBlockHeightSize());
+            int lastBlock = curLane.lengthColumn - 1;
+            for (int curBlock = 0; curBlock <= lastBlock; curBlock++) {
+                float curBlockX = curBlock * map.getBlockWidthSize();
+                batch.draw(texture, curBlockX, curLane.y - blockHeight / 2, blockWidth, blockHeight);
             }
-            batch.draw(texture, 0, curLane.y - map.getBlockHeightSize() / 2, map.getBlockWidthSize(), map.getBlockHeightSize());
         }
         batch.end();
     }

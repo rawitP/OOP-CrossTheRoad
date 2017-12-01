@@ -12,8 +12,8 @@ public class World {
 
     private CrossTheRoadGame crossTheRoadGame;
     private Map map;
-    private Chicken chicken;
-    public Camera cam;
+    private Player player;
+    private Camera cam;
 
     World(CrossTheRoadGame crossTheRoadGame) {
         this.crossTheRoadGame = crossTheRoadGame;
@@ -21,27 +21,45 @@ public class World {
     }
 
     private void initWorld() {
+
+        /* Setup Camera */
         cam = new Camera(CAM_VIEWPORT_WIDTH, CAM_VIEWPORT_HEIGHT);
         cam.setSpeed(CAM_INIT_SPEED);
         cam.x = WORLD_WIDTH / 2.0f;
         cam.y = CAM_VIEWPORT_HEIGHT / 2.0f + 0;
 
+        /* Setup Game Object */
         map = new Map(WORLD_WIDTH, WORLD_HEIGHT, this);
-        chicken = new Chicken(0, 0, this);
+        player = new Player(2, 2, this);
     }
 
-    public Chicken getChicken() {
-        return chicken;
+    public Player getPlayer() {
+        return player;
     }
 
     public Map getMap() {
         return map;
     }
 
+    public Camera getCam() {
+        return cam;
+    }
+
+    private void updateMap() {
+
+        /* Remove bottom lane if it outside of camera view */
+        float camBottom = cam.y - cam.viewportHeight / 2.0f;
+        float headLaneTop = map.baseLaneList.get(0).y + map.getBlockHeightSize() / 2;
+        if(camBottom > headLaneTop) {
+            map.removeHeadLane();
+            map.addTailLane();
+        }
+    }
+
     public void update(float delta) {
         cam.update(delta);
-        map.update(delta);
-        chicken.update(delta);
+        updateMap();
+        player.update(delta);
     }
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Map {
 
-    private final static int COLUMN = 5;
+    public final static int COLUMN = 5;
     public  final static int ROW = 20;
 
     private World world;
@@ -37,7 +37,7 @@ public class Map {
 
     private void initMap() {
         for (int i = 0; i < ROW; i++) {
-            addLane();
+            addTailLane();
         }
     }
 
@@ -45,7 +45,19 @@ public class Map {
         return new BaseLane(width, COLUMN);
     }
 
-    private void addLane() {
+    public BaseLane getLane(int laneIndex) {
+        return baseLaneList.get(laneIndex);
+    }
+
+    public BaseLane getNextLane(BaseLane curLane) {
+        return baseLaneList.get(baseLaneList.indexOf(curLane) + 1);
+    }
+
+    public BaseLane getPrevLane(BaseLane curLane) {
+        return baseLaneList.get(baseLaneList.indexOf(curLane) - 1);
+    }
+
+    public void addTailLane() {
         int addRowIndex = baseLaneList.size();
         baseLaneList.add(getBaseLane());
         if (addRowIndex > 0) {
@@ -55,6 +67,11 @@ public class Map {
         }
     }
 
+    public void removeHeadLane() {
+        baseLaneList.remove(0);
+    }
+
     public void update(float delta) {
+
     }
 }

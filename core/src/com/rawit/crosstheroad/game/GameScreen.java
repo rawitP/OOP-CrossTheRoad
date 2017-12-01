@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen extends ScreenAdapter {
@@ -16,6 +15,7 @@ public class GameScreen extends ScreenAdapter {
     SpriteBatch batch;
 
     OrthographicCamera cam;
+    Camera worldCam;
 
     public GameScreen(CrossTheRoadGame crossTheRoadGame) {
         this.crossTheRoadGame = crossTheRoadGame;
@@ -23,14 +23,9 @@ public class GameScreen extends ScreenAdapter {
         this.world = new World(crossTheRoadGame);
         this.worldRenderer = new WorldRenderer(crossTheRoadGame, world);
 
-        /*
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();\
-        */
-        Camera worldCam = world.cam;
-        float w = worldCam.viewportWidth;
-        float h = worldCam.viewportHeight;
-        cam = new OrthographicCamera(w, h);
+        /* Create camera and sync it */
+        worldCam = world.getCam();
+        cam = new OrthographicCamera(worldCam.viewportWidth, worldCam.viewportHeight);
         cam.position.set(worldCam.x, worldCam.y, 0);
         cam.update();
     }
@@ -44,20 +39,21 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void updatePlayer() {
-        Chicken chicken = world.getChicken();
-        if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            chicken.move(Chicken.Direction.LEFT);
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            chicken.move(Chicken.Direction.RIGHT);
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            chicken.move(Chicken.Direction.UP);
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            chicken.move(Chicken.Direction.DOWN);
+        Player player = world.getPlayer();
+        if(!player.isMoving) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                player.move(Player.Direction.LEFT);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                player.move(Player.Direction.RIGHT);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+                player.move(Player.Direction.UP);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                player.move(Player.Direction.DOWN);
+            }
         }
     }
 
     private void updateCam(float delta) {
-        Camera worldCam = world.cam;
         cam.position.y = worldCam.y;
         cam.update();
         batch.setProjectionMatrix(cam.combined);
