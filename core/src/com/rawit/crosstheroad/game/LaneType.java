@@ -1,5 +1,5 @@
 package com.rawit.crosstheroad.game;
 
 public enum LaneType {
-    Grass, Stone, Water, Flat
+    Car, Grass, Stone, Water, Flat
 }

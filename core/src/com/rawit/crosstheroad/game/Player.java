@@ -34,7 +34,7 @@ public class Player {
         /* Get move distance */
         Map map = world.getMap();
         moveDistanceX = map.getBlockWidthSize();
-        moveDistanceY = map.getBlockWidthSize();
+        moveDistanceY = map.getBlockHeightSize();
 
         /* Set player position */
         lane = map.getLane(playerRow);
@@ -95,7 +95,7 @@ public class Player {
             case UP: {
                 Map map = world.getMap();
                 int nextLaneIndex = map.baseLaneList.indexOf(lane) + 1;
-                if (nextLaneIndex > world.getMap().ROW - 1) {
+                if (nextLaneIndex > world.getMap().baseLaneList.size() - 1) {
                     return false;
                 }
             } break;

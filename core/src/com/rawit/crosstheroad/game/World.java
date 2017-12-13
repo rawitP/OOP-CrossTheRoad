@@ -52,7 +52,7 @@ public class World {
         float headLaneTop = map.baseLaneList.get(0).y + map.getBlockHeightSize() / 2;
         if(camBottom > headLaneTop) {
             map.removeHeadLane();
-            map.addTailLane();
+            map.addTailLane(LaneType.Car);
         }
     }
 
@@ -60,6 +60,7 @@ public class World {
         cam.update(delta);
         updateMap();
         player.update(delta);
+        map.update(delta);
     }
 
 }

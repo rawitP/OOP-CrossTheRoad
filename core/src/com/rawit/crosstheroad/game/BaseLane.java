@@ -2,23 +2,23 @@ package com.rawit.crosstheroad.game;
 
 public class BaseLane {
 
-    public int lengthColumn;
-    private float length;
     public static final int LENGTH_COLUMN_OFFSET = 3;
+
+    public boolean columnWall[];
+    public int columnLength;
+    public float length;
+
     public float y;
     public LaneType type;
 
-    public BaseLane(float length, int lengthDisplayColumn) {
+    public BaseLane(float length, int columnLength) {
         this.length = length;
-        this.lengthColumn = lengthDisplayColumn;
+        this.columnLength = columnLength;
+        columnWall = new boolean[columnLength];
     }
 
-    public void setType(LaneType type) {
-        this.type = type;
-    }
+    public void update(float delta) {
 
-    public void setY(float y) {
-        this.y = y;
     }
 
 }
