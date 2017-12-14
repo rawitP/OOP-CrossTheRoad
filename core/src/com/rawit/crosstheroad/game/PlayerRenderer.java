@@ -17,7 +17,7 @@ public class PlayerRenderer {
 
     public void render(float delta) {
         batch.begin();
-        batch.draw(chickenImg, player.getX() - player.width/2, player.getY() - player.height/2, player.width, player.height);
+        batch.draw(chickenImg, player.x - player.width/2, player.y - player.height/2, player.width, player.height);
         batch.end();
     }
 

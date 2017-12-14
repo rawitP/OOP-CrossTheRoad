@@ -6,19 +6,18 @@ import java.util.List;
 
 public class Map {
 
-    public final static int COLUMN = 5;
+    public final static int COLUMN = 15;
     public  final static int ROW = 16;
 
-    private int rowCamera;
+    public int rowCamera;
 
-    private World world;
+    public World world;
     private float height;
     private float width;
     private float blockWidthSize;
     private float blockHeightSize;
 
     public List<BaseLane> baseLaneList = new ArrayList<BaseLane>();
-
 
     public Map(int width, int height, World world) {
         this.height = height;
@@ -30,6 +29,42 @@ public class Map {
         initMap();
     }
 
+    enum LaneSet {
+        Flat, RandomWall, Road, Highway
+    }
+    private static final LaneSet[] LANE_SET_VALUES = LaneSet.values();
+
+    private void addLaneSet(LaneSet set) {
+
+        switch(set) {
+            case Flat:
+                for (int i = 0; i < 2; i++) {
+                    addTailLane(LaneType.Flat);
+                }
+                System.out.println("Lane set: Flat");
+                break;
+            case RandomWall:
+                for (int i = 0; i < 2; i++) {
+                    addTailLane(LaneType.RandomWall);
+                }
+            case Road:
+                int randomRoadLane = world.random.nextInt(3) + 1;
+                for (int i = 0; i < randomRoadLane; i++) {
+                    addTailLane(LaneType.Car);
+                }
+                addTailLane(LaneType.RandomWall);
+                System.out.println("Lane set: Road");
+                break;
+            case Highway:
+                for (int i = 0; i < 5; i++) {
+                    addTailLane(LaneType.Car);
+                }
+                addTailLane(LaneType.RandomWall);
+                System.out.println("Lane set: Highway");
+                break;
+        }
+    }
+
     public float getBlockWidthSize() {
         return blockWidthSize;
     }
@@ -39,16 +74,15 @@ public class Map {
     }
 
     private void initMap() {
-        for (int i = 0; i < rowCamera; i++) {
-            addTailLane(LaneType.Flat);
-        }
-        for (int i = rowCamera; i < ROW; i++) {
-            addTailLane(LaneType.Car);
+        addLaneSet(LaneSet.Flat);
+
+        while(baseLaneList.size() < ROW) {
+            addRandomLaneSet();
         }
     }
 
     private BaseLane getBaseLane() {
-        return new BaseLane(width, COLUMN);
+        return new BaseLane(width, COLUMN, world);
     }
 
     public BaseLane getLane(int laneIndex) {
@@ -68,10 +102,16 @@ public class Map {
 
         /* Create new lane */
         BaseLane newLane;
-        if (type == LaneType.Car) {
-            newLane = new CarLane(width, COLUMN);
-        } else {
-            newLane = new BaseLane(width, COLUMN);
+        switch (type) {
+            case RandomWall:
+                newLane = new BaseLane(width, COLUMN, world);
+                newLane.randomWall();
+                break;
+            case Car:
+                newLane = new CarLane(width, COLUMN, world);
+                break;
+            default:
+                newLane = new BaseLane(width, COLUMN, world);
         }
 
         /* Set lane's position */
@@ -82,6 +122,10 @@ public class Map {
         }
 
         baseLaneList.add(newLane);
+    }
+
+    public void addRandomLaneSet() {
+        addLaneSet(LANE_SET_VALUES[world.random.nextInt(LANE_SET_VALUES.length - 1) + 1]);
     }
 
     public void removeHeadLane() {

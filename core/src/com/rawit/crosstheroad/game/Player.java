@@ -1,50 +1,61 @@
 package com.rawit.crosstheroad.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Math.abs;
 
 public class Player {
 
-    public static final float INIT_WIDTH = 75;
-    public static final float INIT_HEIGHT = 75;
+    public static final float WIDTH_RATIO = 0.75f;
+    public static final float HEIGHT_RATIO = 0.75f;
     public static final float MOVE_SPEED = 15;
+    public static final float COLLISION_RATIO = 0.75f;
+
+    private boolean lifeStatus;
 
     private World world;
     public float width;
     public float height;
-    private float x,y;
-    public float moveDistanceX;
-    public float moveDistanceY;
+    public float x;
+    public float y;
+    public float blockWidth;
+    public float blockHeight;
     private int column;
 
     private float nextX, nextY;
     public boolean isMoving;
+    private List<MoveLaneListener> listeners;
 
-    private BaseLane lane;
+    public BaseLane lane;
 
     public enum Direction {
         UP, DOWN, LEFT, RIGHT;
     }
 
     public Player(int playerRow, int playerColumn, World world) {
-        width = INIT_WIDTH;
-        height = INIT_HEIGHT;
         this.world = world;
         this.column = playerColumn;
+        lifeStatus = true;
 
         /* Get move distance */
         Map map = world.getMap();
-        moveDistanceX = map.getBlockWidthSize();
-        moveDistanceY = map.getBlockHeightSize();
+        blockWidth = map.getBlockWidthSize();
+        blockHeight = map.getBlockHeightSize();
+        width = blockWidth * WIDTH_RATIO;
+        height = blockHeight * HEIGHT_RATIO;
 
         /* Set player position */
         lane = map.getLane(playerRow);
-        x = playerColumn * moveDistanceX + moveDistanceX / 2.0f;
+        x = playerColumn * blockWidth + blockWidth / 2.0f;
         y = lane.y;
 
         /* Set next position */
         isMoving = false;
         nextX = x;
         nextY = y;
+
+        listeners = new ArrayList<MoveLaneListener>();
     }
 
     public void setPosition(int x, int y) {
@@ -52,26 +63,20 @@ public class Player {
         this.y = y;
     }
 
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
     public void move(Direction dir) {
+        if(!isAlive()) return; // Do not move if it dead.
+
         switch(dir) {
             case RIGHT:
                 if (canMove(dir)) {
                     column += 1;
-                    setNextPos(nextX + moveDistanceX, nextY);
+                    setNextPos(nextX + blockWidth, nextY);
                 }
                 break;
             case LEFT:
                 if (canMove(dir)) {
                     column -= 1;
-                    setNextPos(nextX - moveDistanceX, nextY);
+                    setNextPos(nextX - blockWidth, nextY);
                 }
                 break;
             case UP:
@@ -79,6 +84,7 @@ public class Player {
                     Map map = world.getMap();
                     setLane(map.getNextLane(lane));
                     setNextPos(x,lane.y);
+                    notifyMoveLaneListeners(dir);
                 }
                 break;
             case DOWN:
@@ -86,6 +92,7 @@ public class Player {
                     Map map = world.getMap();
                     setLane(map.getPrevLane(lane));
                     setNextPos(x,lane.y);
+                    notifyMoveLaneListeners(dir);
                 }
         }
     }
@@ -98,11 +105,17 @@ public class Player {
                 if (nextLaneIndex > world.getMap().baseLaneList.size() - 1) {
                     return false;
                 }
+                if(world.getMap().baseLaneList.get(nextLaneIndex).columnWall[column] == true) {
+                    return false;
+                }
             } break;
             case DOWN: {
                 Map map = world.getMap();
                 int nextLaneIndex = map.baseLaneList.indexOf(lane) - 1;
                 if (nextLaneIndex < 0) {
+                    return false;
+                }
+                if(world.getMap().baseLaneList.get(nextLaneIndex).columnWall[column] == true) {
                     return false;
                 }
             } break;
@@ -111,10 +124,16 @@ public class Player {
                 if (nextColumn < 0) {
                     return false;
                 }
+                if(lane.columnWall[nextColumn] == true) {
+                    return false;
+                }
             } break;
             case RIGHT: {
                 int nextColumn = column + 1;
                 if (nextColumn > world.getMap().COLUMN - 1) {
+                    return false;
+                }
+                if(lane.columnWall[nextColumn] == true) {
                     return false;
                 }
             } break;
@@ -132,7 +151,30 @@ public class Player {
         this.nextY = nextY;
     }
 
+    public void setLifeStatus(boolean value) {
+        lifeStatus = value;
+    }
+
+    public boolean isAlive() {
+        return lifeStatus;
+    }
+
+    public interface MoveLaneListener {
+        void notifyMoveLane(Direction dir);
+    }
+
+    public void registerMoveLaneListener(MoveLaneListener l) {
+        listeners.add(l);
+    }
+
+    private void notifyMoveLaneListeners(Direction dir) {
+        for(MoveLaneListener l : listeners) {
+            l.notifyMoveLane(dir);
+        }
+    }
+
     public void update(float delta) {
+
         Map map = world.getMap();
         if(isMoving) {
 
