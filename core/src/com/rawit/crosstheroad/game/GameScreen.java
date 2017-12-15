@@ -38,8 +38,10 @@ public class GameScreen extends ScreenAdapter {
         worldRenderer.render(delta);
     }
 
-    private void updatePlayer() {
+    private void playerControl() {
         Player player = world.getPlayer();
+
+        /* Control player by keyboard */
         if(!player.isMoving) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
                 player.move(Player.Direction.LEFT);
@@ -59,8 +61,17 @@ public class GameScreen extends ScreenAdapter {
         batch.setProjectionMatrix(cam.combined);
     }
 
+    private void gameControl() {
+
+        /* For restarting game */
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            crossTheRoadGame.changeScreen(CrossTheRoadGame.Screen.Game);
+        }
+    }
+
     private void update(float delta) {
-        updatePlayer();
+        gameControl();
+        playerControl();
         world.update(delta);
         updateCam(delta);
     }

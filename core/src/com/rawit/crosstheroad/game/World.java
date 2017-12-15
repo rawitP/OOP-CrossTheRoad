@@ -6,23 +6,20 @@ public class World {
 
     private static final int CAM_VIEWPORT_WIDTH = CrossTheRoadGame.WIDTH;
     private static final int CAM_VIEWPORT_HEIGHT = CrossTheRoadGame.HEIGHT;
+    private static final float CAM_INIT_SPEED = 2;
 
     private static final int WORLD_WIDTH = CAM_VIEWPORT_WIDTH;
     private static final int WORLD_HEIGHT = 2 * CAM_VIEWPORT_HEIGHT;
 
-    private static final float CAM_INIT_SPEED = 2;
-
     private CrossTheRoadGame crossTheRoadGame;
-    private Map map;
-    private Player player;
     private Camera cam;
+    private Map map;
+    public Theme theme;
+    private Player player;
+    public Random random;
 
     public int score;
     private int curRow;
-
-    public Random random;
-
-    public Theme theme;
 
     enum Theme {
         summer, winter, desert
@@ -47,7 +44,7 @@ public class World {
         random = new Random();
         map = new Map(WORLD_WIDTH, WORLD_HEIGHT, this);
         player = new Player(1, map.COLUMN / 2, this);
-        registerMoveLaneListener();
+        registerMoveLaneListener(); // For score increasing
 
         score = 0;
         curRow = 0;
@@ -77,6 +74,7 @@ public class World {
 
     private void themeControl() {
         if(score % 25 == 0) {
+            cam.speed += 0.5f;
             int nextThemeIndex = random.nextInt(THEME_VALUES.length);
             if(THEME_VALUES[nextThemeIndex] == theme) {
                 nextThemeIndex = (nextThemeIndex + 1) % THEME_VALUES.length;
@@ -107,6 +105,8 @@ public class World {
     }
 
     private void checkPlayer() {
+
+        /* Player will dead if it is outside the camera */
         if (map.baseLaneList.indexOf(player.lane) == -1) {
             player.setLifeStatus(false);
         }

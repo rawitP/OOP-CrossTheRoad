@@ -48,7 +48,7 @@ public class MapRenderer {
                 int lastBlock = curLane.columnLength - 1;
                 for (int curBlock = 0; curBlock <= lastBlock; curBlock++) {
                     float curBlockX = curBlock * map.getBlockWidthSize();
-                    batch.draw(roadTile, curBlockX, curLane.y - blockHeight / 2, blockWidth, blockHeight);
+                    batch.draw(roadTile, curBlockX, (curLane.y - blockHeight / 2), blockWidth, blockHeight);
                 }
             } else {
                 Texture[] tileArray;

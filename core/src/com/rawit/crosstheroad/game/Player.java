@@ -29,6 +29,8 @@ public class Player {
 
     public BaseLane lane;
 
+    public Direction curDirection;
+
     public enum Direction {
         UP, DOWN, LEFT, RIGHT;
     }
@@ -56,6 +58,8 @@ public class Player {
         nextY = y;
 
         listeners = new ArrayList<MoveLaneListener>();
+
+        curDirection = Direction.UP;
     }
 
     public void setPosition(int x, int y) {
@@ -71,12 +75,14 @@ public class Player {
                 if (canMove(dir)) {
                     column += 1;
                     setNextPos(nextX + blockWidth, nextY);
+                    curDirection = Direction.RIGHT;
                 }
                 break;
             case LEFT:
                 if (canMove(dir)) {
                     column -= 1;
                     setNextPos(nextX - blockWidth, nextY);
+                    curDirection = Direction.LEFT;
                 }
                 break;
             case UP:
@@ -85,6 +91,7 @@ public class Player {
                     setLane(map.getNextLane(lane));
                     setNextPos(x,lane.y);
                     notifyMoveLaneListeners(dir);
+                    curDirection = Direction.UP;
                 }
                 break;
             case DOWN:
@@ -93,6 +100,7 @@ public class Player {
                     setLane(map.getPrevLane(lane));
                     setNextPos(x,lane.y);
                     notifyMoveLaneListeners(dir);
+                    curDirection = Direction.DOWN;
                 }
         }
     }

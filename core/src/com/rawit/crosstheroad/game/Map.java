@@ -74,6 +74,8 @@ public class Map {
     }
 
     private void initMap() {
+        /* More flat space at the beginning */
+        addLaneSet(LaneSet.Flat);
         addLaneSet(LaneSet.Flat);
 
         while(baseLaneList.size() < ROW) {

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class WorldRenderer {
 
-    private static final float FONT_SCORE_SCALE = 2;
+    private static final float FONT_SCORE_SCALE = 3;
 
     private CrossTheRoadGame crossTheRoadGame;
     private World world;
@@ -23,7 +23,7 @@ public class WorldRenderer {
         this.mapRenderer = new MapRenderer(batch, world.getMap());
         carRenderer = new CarRenderer(batch, world.getMap().baseLaneList);
         font = new BitmapFont();
-        font.setColor(0,0,1,1);
+        font.setColor(1,1,1,1);
         font.getData().setScale(FONT_SCORE_SCALE);
     }
 

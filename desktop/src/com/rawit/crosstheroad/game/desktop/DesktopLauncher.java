@@ -9,6 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = CrossTheRoadGame.WIDTH;
 		config.height = CrossTheRoadGame.HEIGHT;
+		config.foregroundFPS = 60;
 		new LwjglApplication(new CrossTheRoadGame(), config);
 	}
 }
